@@ -1,0 +1,142 @@
+---
+title: "DATA606HW3"
+author: "jim lung"
+date: "02-18-2017"
+output: html_document
+---
+Question 3
+Load Data
+
+
+
+```{r setup, include=FALSE}
+library(stringr)
+raw.data <-"555-1239Moe Szyslak(636) 555-0113Burns, C. Montgomery555-6542Rev. Timothy Lovejoy555 8904Ned Flanders636-555-3226Simpson, Homer5553642Dr. Julius Hibbert"   
+name <- unlist(str_extract_all(raw.data, "[[:alpha:]., ]{2,}"))
+name
+
+```
+
+
+
+a. Use the tools of chapter to rearrang the vector so that all elements conform to the standard first_name last name.
+
+To clear "Rev" and "Dr"
+
+
+```{r }
+Name_cleartitle<-unlist(str_replace(name,"[[:alpha:]]{2,}[.]",""))
+Name_cleartitle
+
+```
+First Name:
+
+
+
+```{r }
+firstName <- unlist(str_extract(Name_cleartitle,"[[:alpha:]]{2,}[[:space:]]{1,}|[[:space:]]{1,}[[:alpha:]]{2,}"))
+firstName
+
+```
+Last Name:
+
+
+
+```{r }
+lastName <- unlist(str_extract(Name_cleartitle,"[^[:punct:]][[:space:]][[:alpha:]]{2,}|[[:alpha:]]{2,}[[:punct:]]"))
+lastName <- unlist(str_replace(lastName,"[[:alpha:]][[:space:]]", ""))
+lastName <- unlist(str_replace(lastName,"[[:punct:]]", ""))
+lastName
+
+```
+
+data.frame(firstName, lastName)
+
+```{r }
+data.frame(firstName, lastName)
+
+```
+
+b) Construct a logical vector indicating whether a character has a title(i.e., Rev. and Dr.)
+
+TRUE of logical vector indicate has a title:
+```{r }
+title <- unlist(str_detect(name,"[[:alpha:]]{2,}[.]"))
+title
+
+```
+
+Table of logical vector
+```{r }
+Table1<-data.frame(name,title)
+Table1
+```
+
+c) Construct a logical vector indicating whether a character has a second name.
+
+Logical vector indicate if has a second name.
+
+```{r }
+secondname <- unlist(str_detect(Name_cleartitle,"[[:alpha:]]{1,}[.]"))
+secondname
+
+```
+Table of logical vector
+```{r }
+Table2<-data.frame(name,secondname)
+Table2
+```
+
+4 Describe the types of strings that conform to the following regular expressions and construct an example that is matched by the regular expression.
+
+1.[0-9]+\\$
+```{r }
+example1 <-c ("123$","0","$123","0$","123$ab","123")
+example1 <- str_detect(example1,"[0-9]+\\$")
+example1
+```
+
+2. \\b[a-z]{1,4}\\b
+```{r }
+example2 <-c ("b4b","123tow","abfg123bb","skdfj&","dkk45b","123qef")
+example2 <- str_detect(example2,"\\b[a-z]{1,4}\\b")
+example2
+```
+
+3. .*?\\.txt$
+```{r }
+example3 <-c ("*?txt$","af.txt","abfg123bb","*adfd5b","dff")
+example3 <- str_detect(example3,".*?\\.txt$")
+example3
+```
+
+4. \\d{2}/\\d{2}/\\d{4}
+
+```{r }
+example4 <-c ("adf","af/123","12/12/1212","13/qw/1235","1/1/2032")
+example4 <- str_detect(example4,".*\\d{2}/\\d{2}/\\d{4}")
+example4
+```
+
+5. <(.+?)>.+?</\\1>
+
+```{r }
+example5 <-c ("<abc>abc</abc>","</\fgf>sdfd<s\12>","12/12/1212","<344>dfd<232>","<dfd>")
+example5 <- str_detect(example5,"<(.+?)>.+?</\\1>")
+example5
+```
+
+9. 
+The following code hides a secret message. Crack it with R and regular expressions.
+Hint: Some of the characters are more revealing than others! The code snippet is also
+available in the materials at www.r-datacollection.com.
+
+```{r }
+message<-"clcopCow1zmstc0d87wnkig7OvdicpNuggvhryn92Gjuwczi8hqrfpRxs5Aj5dwpn0Tanwo
+Uwisdij7Lj8kpf03AT5Idr3coc0bt7yczjatOaootj55t3Nj3ne6c4Sfek.r1w1YwwojigO
+d6vrfUrbz2.2bkAnbhzgv4R9i05zEcrop.wAgnb.SqoU65fPa1otfb7wEm24k6t3sR9zqe5
+fy89n6Nd5t9kc4fE905gmc4Rgxo5nhDk!gr"
+message<-unlist(str_extract_all(message, "[[:upper:].]{1,}"))
+message <- cat(str_c(message,collapse = ""))
+
+```
