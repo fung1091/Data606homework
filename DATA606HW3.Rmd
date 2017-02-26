@@ -1,0 +1,289 @@
+---
+title: "DATA606HW3"
+author: "jim lung"
+date: "2017¦~2¤ë26¤é"
+output: html_document
+---
+
+
+
+3.2 Area under the curve, Part II. What percent of a standard normal distribution N(£g =
+0, ?? = 1) is found in each region? Be sure to draw a graph.
+(a)	Z > 1.13 (b) Z < 0.18 (c) Z > 8 (d) |Z| < 0.5
+
+
+Z=(x-£g) / 1 =1.13 
+=(x-0)/1 = 1.13   
+X=1.13
+
+
+```{r }
+normalPlot(bounds=(c(1.13,Inf)))
+
+```
+
+(b) Z < 0.18
+
+Z=(x-£g) / 1 = 0.18
+=(x-0)/1 = 0.18
+X = 0.18
+
+
+
+```{r }
+normalPlot(bounds=(c(-Inf,0.18)))
+
+```
+(c) Z > 8
+
+Z=(x-£g) / 1 = 8
+=(x-0)/1 = 8
+X = 8
+
+```{r }
+normalPlot(bounds=(c(8,Inf)))
+
+```
+
+
+(d) |Z| < 0.5
+
+Z=(x-£g) / 1 = 0.5
+=(x-0)/1 = 0.5
+X = 0.5
+
+-x < 0.5 < x
+
+```{r }
+normalPlot(mean = 0, sd = 1, bounds = c(-x, x))
+```
+
+3.4
+(a)	Write down the short-hand for these two normal distributions.
+
+Men: 
+Mean u = 4313 s
+	SD = 583 s
+Leo = 4948 s
+
+Women: 
+Mean = 5261 s
+SD = 807 s
+Mary = 5513 s 
+
+(b)	What are the Z-scores for Leo¡¦s and Mary¡¦s finishing times? What do these Z-scores tell you?
+
+Z-scores for Leo =  Z=(x-£g) / ??£m
+```{r }
+xleo <-4948
+meanleo <-4313
+sdleo <-583
+zleo <-(xleo-meanleo)/sdleo
+zleo
+```
+
+Z-scores for Mary =  Z=(x-£g) / ??
+Z = (5513-5261) / 807
+Z= 0.312
+```{r }
+xMary <-5513
+meanMary <-5261
+sdMary <-807
+zMary <-(xMary-meanMary)/sdMary
+zMary
+```
+
+The Z score of an observation is the number of standard deviations it falls above or below the mean. 
+
+For Leo, its Z score is 1.089, the number of standard deviation is above the mean. 
+
+For Mary, its Z score is 0.312, the number of standard deviation is below the mean.
+
+(c) Did Leo or Mary rank better in their respective groups? Explain your reasoning.
+
+Mary get lower Zscore-0.312 than Leo Zscore 1.089, that mean mary get faster time than their respective groups.
+
+(d) What percent of the triathletes did Leo finish faster than in his group?
+```{r }
+PfastLeo <- 1-pnorm(1.089)
+PfastLeo
+```
+
+(e) What percent of the triathletes did Mary finish faster than in her group?
+```{r }
+PfastMary <- 1-pnorm(0.312)
+PfastMary
+```
+
+(f) If the distributions of finishing times are not nearly normal, would your answers to parts
+(b) - (e) change? Explain your reasoning.
+
+The part b and c would not be changed, because the ranking will not be changed and Zscore still reflect above or below mean. But the part d & e will be changed, "Pnorm" only used for normal distribution.
+
+3.18
+
+```{r }
+height <- c(54,55,56,56,57,58,58,59,60,60,60,61,61,62,62,63,63,63,64,65,65,67,67,69,73)
+summary(height)
+```
+mean=61.52
+sd=4.58
+
+(a) The mean height is 61.52 inches with a standard deviation of 4.58 inches. Use this information to determine if the heights approximately follow the 68-95-99.7% Rule.
+
+```{r }
+#prove 68% rule
+mean<-61.52
+sd<-4.58
+ub<-61.52+4.58
+lb<-61.52-4.58
+area <- pnorm(ub, mean, sd) - pnorm(lb, mean, sd)
+area
+
+```
+
+```{r }
+#prove 95% rule
+mean<-61.52
+sd<-4.58
+ub1<-61.52+(4.58*2)
+lb1<-61.52-(4.58*2)
+area1 <- pnorm(ub1, mean, sd) - pnorm(lb1, mean, sd)
+area1
+
+```
+```{r }
+#prove 99.7% rule
+mean<-61.52
+sd<-4.58
+ub2<-61.52+(4.58*3)
+lb2<-61.52-(4.58*3)
+area2 <- pnorm(ub2, mean, sd) - pnorm(lb2, mean, sd)
+area2
+
+```
+
+
+b) Do these data appear to follow a normal distribution? Explain your reasoning using the graphs provided below.
+
+```{r }
+histPlot(height)
+
+```
+
+```{r }
+qqnormsim(height)
+
+```
+
+The distriubtion as histogram is similar to normal, and theoretical qualtiles are also keeping the trend of lines.
+
+3.22 
+Defective rate. A machine that produces a special type of transistor (a component of
+computers) has a 2% defective rate. The production is considered a random process where each
+transistor is independent of the others.
+(a) What is the probability that the 10th transistor produced is the first with a defect?
+
+```{r }
+Dr<-0.02
+pgeom((10-1), Dr, lower.tail = TRUE, log.p= FALSE)
+
+```
+
+(b) What is the probability that the machine produces no defective transistors in a batch of 100?
+```{r }
+Dr<-0.02
+pgeom(100, Dr, lower.tail = TRUE)
+
+```
+
+(c) On average, how many transistors would you expect to be produced before the first with a
+defect? What is the standard deviation?
+Expected Value:
+```{r }
+Dr<-0.02
+Expect<- 1/Dr
+Expect
+
+```
+Standard deviation:
+```{r }
+Dr<-0.02
+SD<- sqrt((1-Dr)/Dr^2)
+SD
+
+```
+
+
+(d) Another machine that also produces transistors has a 5% defective rate where each transistor is produced independent of the others. On average how many transistors would you expect to be produced with this machine before the first with a defect? What is the standard deviation?
+
+Expected Value:
+```{r }
+Dr1<-0.05
+Expect1<- 1/Dr1
+Expect1
+
+```
+Standard deviation:
+```{r }
+Dr1<-0.05
+SD<- sqrt((1-Dr1)/Dr1^2)
+SD
+
+```
+
+(e) Based on your answers to parts (c) and (d), how does increasing the probability of an event affect the mean and standard deviation of the wait time until success?
+
+The probability of defective rate was increasing, the expected value to product first defect was decreasing, it mean faster to get defect. And the normal distribution would become narrow due to standard deviation decreased.
+
+3.38 
+Male children. While it is often assumed that the probabilities of having a boy or a girl
+are the same, the actual probability of having a boy is slightly higher at 0.51. Suppose a couple plans to have 3 kids.
+(a) Use the binomial model to calculate the probability that two of them will be boys.
+
+```{r }
+P1<- (((1-0.51)*(0.51^2))*choose(3,2))
+P1
+
+```
+
+
+(b) Write out all possible orderings of 3 children, 2 of whom are boys. Use these scenarios to calculate the same probability from part (a) but using the addition rule for disjoint outcomes. Confirm that your answers from parts (a) and (b) match.
+
+```{r }
+B<-0.51
+G<-(1-0.51)
+P2<- sum((B*B*G),(B*G*B),(G*B*B))
+P2
+
+```
+The answer is the same with part a.
+
+(c) If we wanted to calculate the probability that a couple who plans to have 8 kids will have 3 boys, briefly describe why the approach from part (b) would be more tedious than the
+approach from part (a).
+
+Because the conbination have 56 group to be calculated, part(b) would be more tedious.
+
+3.42 
+
+Serving in volleyball. A not-so-skilled volleyball player has a 15% chance of making the
+serve, which involves hitting the ball so it passes over the net on a trajectory such that it will land in the opposing team¡¦s court. Suppose that her serves are independent of each other.
+(a) What is the probability that on the 10th try she will make her 3rd successful serve?
+
+```{r }
+P3<- ((((1-0.15)^7)*(0.15^3))*choose(9,2))
+P3
+
+```
+
+(b) Suppose she has made two successful serves in nine attempts. What is the probability that
+her 10th serve will be successful?
+
+For only consideration of 10th serve, the probability is 0.15.
+
+(c) Even though parts (a) and (b) discuss the same scenario, the probabilities you calculated
+should be diferent. Can you explain the reason for this discrepancy?
+
+For part a, it is calculated by negative binonmial distribution to count 3rd successful in 10th try.
+
+For part b, it is only calculated the 10th probability.
