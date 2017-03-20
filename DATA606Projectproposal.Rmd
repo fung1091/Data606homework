@@ -1,0 +1,60 @@
+---
+title: "DATA606Projectproposal"
+author: "jim lung"
+date: "03-19-2017"
+output: html_document
+---
+
+https://github.com/hadley/fueleconomy/blob/master/data-raw/vehicles.csv
+
+
+```{r }
+library(fueleconomy)
+library(DT)
+
+fuel<-read.csv("https://github.com/hadley/fueleconomy/blob/master/data-raw/vehicles.csv")
+head(fueleconomy::vehicles)
+```
+
+# Research question
+
+What is the relation and comparsion between fuel economy and manufacturer of vehicles over 30 years from 1984 to 2015?
+
+# What are the cases, and how many are there?
+
+33,442 cases from 1984 to 2015 with different manufacturer, model name, year, epa vehicle size class, transmission, drive train, fuel type, highway fuel economy and city fuel economy. 
+
+# Describe the method of data collection.
+
+The fuel economy data were collected from the EPA by observational data. 
+
+# What type of study is this (observational/experiment)?
+
+The type of study is observational by EPA 
+
+# Data Source: If you collected the data, state self-collected. If not, provide a citation/link.
+The data source is from "http://www.fueleconomy.gov/feg/download.shtml"
+
+#Response: What is the response variable, and what type is it (numerical/categorical)?
+
+The data structure are 12 column with 33,442 entries, the master key is "id". the response variable are highway fuel economy and city fuel economy. It is the type of numerical.
+
+
+#Explanatory: What is the explanatory variable(s), and what type is it (numerical/categorival)?
+
+The explanatory variable is manufacturer, year and number of cylinders. The manufacturer and year are the type of catergorival. And the cylinders is the type of numerical.
+
+Relevant summary statistics
+
+Summary of vehicles
+```{r }
+summary(fueleconomy::vehicles)
+```
+
+```{r }
+hist((fueleconomy::vehicles)$cty)
+```
+
+```{r }
+hist((fueleconomy::vehicles)$hwy)
+```
