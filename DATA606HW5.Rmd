@@ -1,0 +1,283 @@
+---
+title: "DATA606HW5"
+author: "jim lung"
+date: "03-30-2017"
+output: html_document
+---
+
+P.257
+
+5.6 Working backwards, Part II. A 90% confidence interval for a population mean is (65,
+77). The population distribution is approximately normal and the population standard deviation
+is unknown. This confidence interval is based on a simple random sample of 25 observations.
+Calculate the sample mean, the margin of error, and the sample standard deviation.
+
+
+```{r }
+#Sample mean: (65+77)/2 as confidence interval (65,77)
+sm <- ((65+77)/2)
+sm
+
+#Margin of error: ME = t(0.05)*sd/sqrt(n)
+#sample observation n:
+n = 25
+#degree of freedom df=25-1=24:
+df=n-1
+df
+#P=0.05 (90% confidence interval)
+tvalue<-qt(0.95,df)
+tvalue
+#Margin of error: ME=(77-65)/2
+ME=((77-65)/2)
+ME
+
+
+#Sample standard deviation: sd: 17.53
+sd <- ((ME*sqrt(n))/tvalue)
+sd
+
+```
+
+P.259
+
+5.14 SAT scores. SAT scores of students at an Ivy League college are distributed with a
+standard deviation of 250 points. Two statistics students, Raina and Luke, want to estimate the
+average SAT score of students at this college as part of a class project. They want their margin of
+error to be no more than 25 points.
+(a) Raina wants to use a 90% confidence interval. How large a sample should she collect?
+```{r }
+# Standard deviation: sd
+sd=250
+#Margin of error: ME
+ME=25
+# 90% confidence interval in normal distribution, z-score: z
+zscore <- qnorm(0.95)
+zscore
+
+#zscore= ((ME x sqrt(n))/sd)
+n=((zscore*sd/ME)^2)
+n
+# 270 sample size should be collected
+```
+
+(b) Luke wants to use a 99% confidence interval. Without calculating the actual sample size,
+determine whether his sample should be larger or smaller than Raina¡¦s, and explain your
+reasoning.
+
+His sample size should be larger than Raina's, because Zscore would be larger when use a 99 % confidence interval.And larger number of sample size can get more accurate for confidence interval.
+
+(c) Calculate the minimum required sample size for Luke.
+
+```{r }
+# Standard deviation: sd
+sd=250
+#Margin of error: ME
+ME=25
+# 99% confidence interval in normal distribution, z-score: z
+zscore <- qnorm(0.9905)
+zscore
+
+#zscore= ((ME x sqrt(n))/sd)
+n=((zscore*sd/ME)^2)
+n 
+# 550 sample size should be collected
+```
+
+P.261
+
+5.20 High School and Beyond, Part I. The National Center of Education Statistics conducted
+a survey of high school seniors, collecting test data on reading, writing, and several other subjects.
+Here we examine a simple random sample of 200 students from this survey. Side-by-side box plots
+of reading and writing scores as well as a histogram of the di???erences in scores are shown below.
+
+(a) Is there a clear difference in the average reading and writing scores?
+
+There is not a clear difference in average reading and writing, it is almost a normal distribution wtih slightly right skewed. And the mean 
+
+(b) Are the reading and writing scores of each student independent of each other?
+
+The reading and writing scores of each student are independent, reading and writing test data will not affect each other.
+
+(c) Create hypotheses appropriate for the following research question: is there an evident difference
+in the average scores of students in the reading and writing exam?
+
+Null hypothesis  H0:xread-write=0
+H1:xread-write not equal to 0
+
+(d) Check the conditions required to complete this test.
+
+The central limit theorem is the assumption of normality inherent within a relatively non-skewed distribution, having more than 30 independent samples.
+
+(e) The average observed difference in scores is ¡Âxread???write = ???0.545, and the standard deviation
+of the di???erences is 8.887 points. Do these data provide convincing evidence of a difference
+between the average scores on the two exams?
+
+hypotheses test for the average difference:
+Null hypothesis  H0:xread-write=0
+H1:xread-write not equal to 0
+```{r }
+n<-200
+samplemean<--0.545
+sd<-8.887
+se<-sd/(sqrt(n))
+#H0=0
+zmean<-(samplemean-0)/se
+
+#degree of freedrom:
+df<-n-1
+
+#lower-tail:
+pvalue <- pt(zmean,df)
+pvalue
+```
+Because the p-value is greater than 0.05, we do not reject
+the null hypothesis. That is, the data do not provide strong evidence of a difference betweeen the average scores on the two exams.
+
+(f) What type of error might we have made? Explain what the error means in the context of the
+application.
+
+We have made Type 2 error when doesnot reject the null hypothesis H0. There is not difference between the average scores on the two exams.
+
+(g) Based on the results of this hypothesis test, would you expect a confidence interval for the
+average difference between the reading and writing scores to include 0? Explain your reasoning.
+
+I would expect a confidence interval for the average difference between the reading and writing scores to include 0, because it does not reject null hypthesis is H0, there is not difference between the average scores on the exams.
+
+
+
+P.266
+
+5.32 Fuel efficiency of manual and automatic cars, Part I. Each year the US Environmental
+Protection Agency (EPA) releases fuel economy data on cars manufactured in that year.
+Below are summary statistics on fuel efficiency (in miles/gallon) from random samples of cars with
+manual and automatic transmissions manufactured in 2012. Do these data provide strong evidence
+of a difference between the average fuel efficiency of cars with manual and automatic transmissions
+in terms of their average city mileage? Assume that conditions for inference are satisfied.
+
+null hypothesis test:
+H0: meanAuto-meanmanual=0
+H1: meanAuto-meanmanual does not equal to 0
+
+```{r }
+#sample size, n:
+n = 26
+
+#mean of Automatic, mA
+mA=16.12
+#SD of Automatic, SDA
+SDA=3.58
+
+#mean ofManual, mM
+mM=19.85
+
+#SD of Manual, SDM
+SDM=4.51
+
+#Difference in sample means, Dsm
+Dsm <- mA-mM
+Dsm
+
+#standard error of point estimate, SED
+SEA <- SDA /sqrt(n)
+SEM <- SDM / sqrt(n)
+
+SED <- sqrt((SEA^2)+(SEM^2))
+SED
+# Difference of standard error is 1.129
+
+# Test statistic, t
+# null =0
+t <- (Dsm-0)/SED
+t
+# Test statistic is -3.303
+
+#lower-tail:
+df <- n-1
+pvalue <- pt(t,df)
+pvalue
+
+
+
+```
+The p-value is <0.05, it reject the null hypothesis H0, it is evidence that it is evidence of a difference in fuel efficiency between manual and automatic transmissions.
+
+P.272
+
+5.48 Work hours and education. The General Social Survey collects data on demographics,
+education, and work, among many other characteristics of US residents.47 Using ANOVA, we can
+consider educational attainment levels for all 1,172 respondents at once. Below are the distributions
+of hours worked by educational attainment and relevant summary statistics that will be helpful in
+carrying out this analysis.
+
+(a) Write hypotheses for evaluating whether the average number of hours worked varies across the
+five groups.
+
+H0: The mean outcome is the same across all groups.
+H1: At least one mean is different
+
+(b) Check conditions and describe any assumptions you must make to proceed with the test.
+
+The independent observation are within the groups, the data within group are nearly normal, and the equal variability across the groups
+
+
+(c) Below is part of the output associated with this test. Fill in the empty cells.
+null hypothesis test:
+
+
+```{r }
+mean <- c(38.67, 39.6, 41.39, 42.55, 40.45)
+SD <- c(15.81, 14.97, 18.1, 13.62, 15.51)
+n <- c(121, 546, 97, 253, 155)
+
+k <- 5
+totaln <- sum(n)
+totalmean <- sum(mean)
+#total of n is 1172
+
+#degree of Df
+df1 <-k-1
+df1
+#df1 = 4
+
+#residual of DF
+df2 <- total - k
+df2
+#df2=1167
+
+# Fvalue
+pf<-0.0682
+f<-qf(1-pf,ddf,rdf)
+f
+# F value = 2.188931
+
+#F = MSG / MSE
+MSG<-501.54
+MSE<-MSG/f
+MSE
+# MSE = 229.1255
+
+# Sum Sq
+SSG<-df1*MSG
+SSE<-df2*MSE
+SSG
+SSE
+#SSG = 2006.16, SSE = 26739.5
+
+
+# df total
+dftotal <- df1+df2
+dftotal
+# df total = 1171
+
+# Sum Sq total
+SST <- SSG+SSE
+SST
+# Sum Sq total = 269395.6
+
+
+```
+
+(d) What is the conclusion of the test?
+
+ p value = 0.0682 is bigger than 0.05 so it is not a significant difference between the groups and dont reject the null hypothesis.
+
