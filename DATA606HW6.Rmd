@@ -1,0 +1,269 @@
+---
+title: "DATA606HW6"
+author: "jim lung"
+date: "03-30-2017"
+output: html_document
+---
+
+Graded: 6.6, 6.12, 6.20, 6.28, 6.44, 6.48
+
+P. 313
+
+6.6 2010 Healthcare Law. 
+On June 28, 2012 the U.S. Supreme Court upheld the much debated
+2010 healthcare law, declaring it constitutional. A Gallup poll released the day after this decision
+indicates that 46% of 1,012 Americans agree with this decision. At a 95% confidence level, this
+sample has a 3% margin of error. Based on this information, determine if the following statements
+are true or false, and explain your reasoning.39
+(a) We are 95% confident that between 43% and 49% of Americans in this sample support the
+decision of the U.S. Supreme Court on the 2010 healthcare law.
+
+False, it is a fact that 46% of Americans agree, it is not a sample population. 
+
+(b) We are 95% confident that between 43% and 49% of Americans support the decision of the
+U.S. Supreme Court on the 2010 healthcare law.
+
+True, the margin of error is 3% at 95% confident, it mean 46%+3% and 46%-3%, (43% and 49%) as confidence interval.
+
+(c) If we considered many random samples of 1,012 Americans, and we calculated the sample
+proportions of those who support the decision of the U.S. Supreme Court, 95% of those sample
+proportions will be between 43% and 49%.
+
+False, the 95% confidence intervals is definited the population proportions.
+
+(d) The margin of error at a 90% confidence level would be higher than 3%.
+
+True, the population distribution will be narrow if it is lower confidence level
+
+P.315
+
+6.12 Legalization of marijuana, Part I. The 2010 General Social Survey asked 1,259 US residents:
+¡§Do you think the use of marijuana should be made legal, or not?¡¨ 48% of the respondents
+said it should be made legal.44
+(a) Is 48% a sample statistic or a population parameter? Explain.
+
+It is 48% a sample statisitic for 1259 US residents of all.
+
+(b) Construct a 95% confidence interval for the proportion of US residents who think marijuana
+should be made legal, and interpret it in the context of the data.
+
+```{r}
+# 95% confidence interval
+zscore <-1.96
+
+# sample size
+n <-1259
+
+# 48% of respondents thinks it should be legal
+p <- 0.48
+
+# Standard error
+se <- sqrt(p*(1-p)/n)
+se
+
+# 95% confidence interval (upper, lower)
+# margin of error (zscore*se)
+upper <- p + zscore*se
+lower <- p - zscore*se
+ci <- c(upper, lower)
+ci
+
+```
+
+(c) A critic points out that this 95% confidence interval is only accurate if the statistic follows a
+normal distribution, or if the normal model is a good approximation. Is this true for these
+data? Explain.
+
+This is true, the normal model is a good approximation, if sampling distribution is nearly normal when the observations are independent, the p is 0.48 closely to half.
+
+(d) A news piece on this survey¡¦s findings states, ¡§Majority of Americans think marijuana should
+be legalized.¡¨ Based on your confidence interval, is this news piece¡¦s statement justified?
+
+It is not justified because 95% confidence interval from 0.5 to 0.45.
+
+
+P.316
+
+6.20 Legalize Marijuana, Part II. As discussed in Exercise 6.12, the 2010 General Social
+Survey reported a sample where about 48% of US residents thought marijuana should be made
+legal. If we wanted to limit the margin of error of a 95% confidence interval to 2%, about how
+many Americans would we need to survey ?
+
+```{r }
+# 95% confidence interval
+zscore <-1.96
+
+# margin of error
+me <- 0.02
+
+# zscore (95% confidence interval)
+zscore <-qnorm(0.975)
+
+# me = zscore*se
+se <- me/zscore
+se
+
+# number of amercians,n
+P <- 0.48
+n <- (p * (1-p)) / se^2
+n
+# n=2397
+```
+
+P.319
+
+6.28 Sleep deprivation, CA vs. OR, Part I. According to a report on sleep deprivation by the
+Centers for Disease Control and Prevention, the proportion of California residents who reported
+insufficient rest or sleep during each of the preceding 30 days is 8.0%, while this proportion is
+8.8% for Oregon residents. These data are based on simple random samples of 11,545 California
+and 4,691 Oregon residents. Calculate a 95% confidence interval for the difference between the
+proportions of Californians and Oregonians who are sleep deprived and interpret it in context of
+the data.53
+
+```{r }
+# 95% confidence interval
+zscore <- 1.96
+pc <- 0.08
+nc <- 11545
+po <- 0.088
+no <-4691
+
+# standard of error for california
+sec <- sqrt(pc*(1-pc)/nc)
+sec
+# sec=0.0025
+
+# standard of error for oregon
+seo <- sqrt(po*(1-po)/no)
+seo
+# seo=0.0041
+
+sepro <- sqrt(sec^2+seo^2)
+sepro
+# sepro=0.0048
+
+
+lower<-(po-pc)-zscore*sepro
+upper<-(po-pc)+zscore*sepro
+ci <- c(upper, lower)
+ci
+
+# we canot reject null hypothesis, the difference is zero, because the zero contained in confidence interval.
+```
+
+P.323
+
+6.44 Barking deer. Microhabitat factors associated with forage and bed sites of barking deer
+in Hainan Island, China were examined from 2001 to 2002. In this region woods make up 4.8%
+of the land, cultivated grass plot makes up 14.7% and deciduous forests makes up 39.6%. Of the
+426 sites where the deer forage, 4 were categorized as woods, 16 as cultivated grassplot, and 61 as
+deciduous forests. The table below summarizes these data.62
+
+(a) Write the hypotheses for testing if barking deer prefer to forage
+in certain habitats over others.
+
+Null H0: it is no difference between each forage for deer
+Alternative Ha: deer  prefer at least one of the forage
+
+(b) What type of test can we use to answer this research question?
+
+it is using the Chi-square test for one-way table
+
+(c) Check if the assumptions and conditions required for this test
+are satisfied.
+
+The case likes independent for each case and it is at least 5 expected case for each particular scenario.
+
+(d) Do these data provide convincing evidence that barking deer prefer
+to forage in certain habitats over others? Conduct an appropriate
+hypothesis test to answer this research question.
+
+```{r}
+# total, n=426
+n<-426
+
+obser<-c(4,16,67,345)
+
+expected<-c(n*0.048,n*0.147,n*0.396,n*0.409)
+
+chisq<-sum((obser-expected)^2/expected)
+df<-4-1
+
+pchisq(chisq,df,lower.tail=FALSE)
+
+```
+
+The p-value is 1.144396e-59 or 0, it is not reject the null that it is no difference between each forage for deer.
+
+
+P.325
+
+6.48 Coffee and Depression. Researchers conducted a study investigating the relationship
+between caffeinated coffee consumption and risk of depression in women. They collected data
+on 50,739 women free of depression symptoms at the start of the study in the year 1996, and
+these women were followed through 2006. The researchers used questionnaires to collect data on
+ca???einated co???ee consumption, asked each individual about physician-diagnosed depression, and
+also asked about the use of antidepressants. The table below shows the distribution of incidences
+of depression by amount of ca???einated coffee consumption.63
+
+(a) What type of test is appropriate for evaluating if there is an association between co???ee intake
+and depression?
+
+Chi square test is used.
+
+(b) Write the hypotheses for the test you identified in part (a).
+
+H0 there is not difference in coffee among the depression yes no groups for women.
+
+Ha: There is a difference in coffee among the depression groupings for women.
+
+(c) Calculate the overall proportion of women who do and do not suffer from depression.
+
+```{r}
+depress <- 2607
+nodepress <- 48132
+total <- depress + nodepress
+propdepress <- depress/total
+propnodepress <- nodepress/total
+propdepress
+propnodepress
+```
+
+(d) Identify the expected count for the highlighted cell, and calculate the contribution of this cell
+to the test statistic, i.e. (Observed ??? Expected)2/Expected.
+
+```{r}
+# Expected count for 2-6 per week, total=6617
+expected <- propdepress*6617
+expected
+# expected count=339
+
+observed <- 373
+teststat <- ((observed-expected)^2)/expected
+teststat
+```
+The contribution is 3.2.
+
+(e) The test statistic is x2 = 20.93. What is the p-value?
+
+```{r}
+# p-value
+test <- 20.93
+df <- (5-1)*(2-1)
+#df=4
+
+pchisq(test,df,lower.tail = FALSE)
+
+
+
+```
+
+(f) What is the conclusion of the hypothesis test?
+
+pvalue is less than 0.05, it is fail to reject the null hypothesis, it is not enough supporting the association between caffinated coffee consumption and depression.
+
+(g) One of the authors of this study was quoted on the NYTimes as saying it was ¡§too early to
+recommend that women load up on extra coffee¡¨ based on just this study.64 Do you agree with
+this statement? Explain your reasoning.
+
+I agree this statement, because depression may be caused by the other factors.
