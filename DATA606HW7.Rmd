@@ -1,0 +1,182 @@
+---
+title: "DATA606HW7"
+author: "jim lung"
+date: "2017¦~4¤ë20¤é"
+output: html_document
+---
+
+Chapter 7 - Introduction to Linear Regression
+Graded: 7.24, 7.26, 7.30, 7.40
+
+#Exercise 7.24
+
+7.24 Nutrition at Starbucks, Part I. The scatterplot below shows the relationship between
+the number of calories and amount of carbohydrates (in grams) Starbucks food menu items contain.
+21 Since Starbucks only lists the number of calories on the display items, we are interested in
+predicting the amount of carbs a menu item has based on its calorie content.
+
+(a) Describe the relationship between number of calories and amount of carbohydrates (in grams)
+that Starbucks food menu items contain.
+
+It is a Straight band relationship of curved trend with positive relationship. If amount of calories increase, the carbohydrates will be increased proportionly.
+
+
+(b) In this scenario, what are the explanatory and response variables?
+
+In this case, the calories is in a relationship to explain or to predict changes in the values of carbohydrates, so the explanatory variable is Calories at x axis, and response variable is Carbohydrates at y axis.
+
+(c) Why might we want to fit a regression line to these data?
+
+We might be interested in predicting the number of carbohydrates in a particular food item based on the number of calories.
+
+We can set up the equation to predict amount of carbohydrates based on particular food item of caories. This method can estimate the uncertainty in the slope and y-intercept for a regression line.
+
+(d) Do these data meet the conditions required for fitting a least squares line?
+
+Linearity: The data are shown in linear, but the variability of the data around the line increases with larger values of x.
+
+Nearly normal residuals: The residuals distribution appears nearly normal.
+
+Constant variability: It is not a constant variability, because the variability of thedata around the line increases with larger values of x. The variability of points around the least square line must remain roughly constant.
+
+Independent observations: The menu item is presumably independent observation, but just involve starbucks only.
+
+It does not satisfy the conditions of linerity and constant variability, so it not fit a least squares line.
+
+#Exercise 7.26
+
+7.26 Body measurements, Part III. Exercise 7.15 introduces data on shoulder girth and height of a group of individuals. The mean shoulder girth is 107.20 cm with a standard deviation of 10.37 cm. The mean height is 171.14 cm with a standard deviation of 9.41 cm. The correlation between height and shoulder girth is 0.67.
+
+(a) Write the equation of the regression line for predicting height.
+
+Linear regression assumes:
+
+y = £]0 + £]1*x
+
+b1 = (Sh / Sg)* R      (£]1  by b1 as defined)
+```{r}
+#Mean height, 
+y <-  171.14 
+
+#Mean shoulder girth, 
+x <-  107.2
+
+#Correlation, 
+R <- 0.67
+
+#SD height, 
+Sh <- 9.41
+#SD shoulder girth, 
+Sg <- 10.37
+
+b1 <- (Sh / Sg)*R
+b1
+b0 <- y - (b1*x)
+b0
+```
+y = 105.96 + 0.608 x
+
+(b) Interpret the slope and the intercept in this context.
+
+The intercerpt of height is 105.96 when shoulder girth is 0, the height will be increase by shoulder girth increasing according to 0.608.
+
+(c) Calculate R2 of the regression line for predicting height from shoulder girth, and interpret it
+in the context of the application.
+
+```{r}
+R <- 0.67
+R2 <- R^2
+R2
+```
+The availability of height is around 0.45 for the linear model.
+
+
+(d) A randomly selected student from your class has a shoulder girth of 100 cm. Predict the height
+of this student using the model.
+```{r}
+girth <- 100
+height <- b0 + b1*girth
+height
+
+```
+the height by using the model is 166.
+
+(e) The student from part (d) is 160 cm tall. Calculate the residual, and explain what this residual
+means.
+
+```{r}
+# height (100), y1 = 166
+# e = y0 - y1
+ 
+e <- 160 - 166
+e
+
+```
+This was close to estimate of -6
+
+(f) A one year old has a shoulder girth of 56 cm. Would it be appropriate to use this linear model
+to predict the height of this child?
+
+#Exercise 7.30
+
+7.30 Cats, Part I. The following regression output is for predicting the heart weight (in g) of cats from their body weight (in kg). The coefficients are estimated using a dataset of 144 domestic cats.
+
+(a) Write out the linear model.
+b0 = -0.357
+b1 = 4.034
+
+y = -0.357 + 4.034 * x 
+
+
+(b) Interpret the intercept.
+
+When body weight is 0, the intercept is -0.357 of y - heart weight, but it is impossible the body weight to be 0, it is non sense of this result.
+
+(c) Interpret the slope.
+
+The parameter of slope is 4.034 during the body weight per each kg.
+
+(d) Interpret R2.
+
+R^2 is 64.66 % which describe how closely the data cluster around the linear fit.
+
+(e) Calculate the correlation coefficient.
+
+R is correlation coefficient, 
+
+```{r}
+R <- sqrt(0.6466)
+R
+
+
+```
+
+#Exercise 7.40
+
+7.40 Rate my professor. Many college courses conclude by giving students the opportunity to evaluate the course and the instructor anonymously. However, the use of these student evaluations as an indicator of course quality and teaching e???ectiveness is often criticized because these measures may reflect the influence of non-teaching related characteristics, such as the physical appearance of the instructor. Researchers at University of Texas, Austin collected data on teaching evaluation score (higher score means better) and standardized beauty score (a score of 0 means average, negative score means below average, and a positive score means above average) for a sample of 463 professors.24 The scatterplot below shows the relationship between these variables, and also provided is a regression output for predicting teaching evaluation score from beauty score.
+
+(a) Given that the average standardized beauty score is -0.0883 and average teaching evaluation score is 3.9983, calculate the slope. Alternatively, the slope may be computed using just the information provided in the model summary table.
+
+```{r}
+# b0 = 4.010 
+# y = 4.010 + b1*x
+y <- 3.9983
+x <- -0.0883
+b1 <- (y-4.010)/x
+b1
+
+```
+
+(b) Do these data provide convincing evidence that the slope of the relationship between teaching evaluation and beauty is positive? Explain your reasoning.
+
+In the assumption H0: b0 =0, the p-value show it is 0.000, it is evidence that the beauty score are not 0 and it is positive.
+
+(c) List the conditions required for linear regression and check if each one is satisfied for this model based on the following diagnostic plots.
+
+Linearity: It is a weak trend in scatterplot. Only R^2 relate to linear condition.
+
+Nearly normal residuals:  the residuals distribution are nearly normal.
+
+Constant variability: The scatterplot of the residuals show that it is constant variability.
+
+Independent observations: Assuming independence due to no clear evidence.
