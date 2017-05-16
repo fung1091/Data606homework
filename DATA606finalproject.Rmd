@@ -1,0 +1,271 @@
+---
+title: "DATA606finalproject"
+author: "jim lung"
+date: "2017¦~5¤ë11¤é"
+output: html_document
+---
+
+# Final Project 
+
+# Introduction:
+
+This is the Fuel economy data for all cars sold in the US from 1984 to 2015 from the source of Enviromental protection agency. And this project are to investigate the change in fuel econony and relationships between fuel ecomomy and other car types.
+
+https://cran.r-project.org/web/packages/fueleconomy/fueleconomy.pdf
+
+Main questions includes:
+
+1. Does any change the fuel economy of vehicles from 1984 to 2015?
+2. What is the relationships between fuel economy and engines with different cylinders?
+3. What is the relationships for different fuel types?
+
+# Data: Write about the data from your proposal in text form. Address the following points:
+## Data collection: Describe how the data were collected.
+
+```{r }
+library(fueleconomy)
+library(DT)
+
+fuel <- fueleconomy::vehicles
+head(fuel)
+
+```
+
+The fuel economy data were collected from the EPA by observational data. 
+
+```{r}
+str(fuel)
+```
+
+**id Unique EPA identifier**
+**make Manufacturer**
+**model Model name**
+**year Model year**
+**class EPA vehicle size class, http://www.fueleconomy.gov/feg/ws/wsData.shtml#VClass**
+**trans Transmission**
+**drive Drive train**
+**cyl Number of cylinders**
+**displ Engine displacement, in litres**
+**fuel Fuel type**
+**hwy Highway fuel economy, in mpg**
+**cty City fuel economy, in mpg**
+
+## Cases:
+
+33,442 cases from 1984 to 2015 with different manufacturer, model name, year, epa vehicle size class, transmission, drive train, fuel type, highway fuel economy and city fuel economy. 
+
+
+## Variables: 
+
+The type of study is an observational study.  In order to understand the relationships between explanatory variables and reponse variable, I study the dataset collected by years, numbers of cylinders and fuel type in different ways: explanatory data analysis with both summary statistics and data visulization, inference analysis and applying for Machine learning knowledge. 
+
+## Scope of inference - generalizability: 
+
+Identify the population of interest, and whether the findings from this analysis can be generalized to that population, or, if not, a subsection of that population. Explain why or why not. Also discuss any potential sources of bias that might prevent generalizability.
+
+The findings from this analysis can be generlized to that 33,442 cases, because the sample size are large enough for identification and the fuel economy are supposed independently to be estimated, exclusive other miner factor, like human driving improperly.
+
+##Scope of inference - causality:
+
+The cause (e.g. fuel economy ) and effect (e.g. number of cylinders) are related,there are no plausible alternative explanations for the observed covariation. Though observation study, the causal connection can be investigated between cause and effect.
+
+#Exploratory data analysis: 
+
+The single value of predicated variables for fuel economy should be used, so the combined fuel economy will be calculated for data analysis, the ratio informaton as following link:
+
+https://www.fueleconomy.gov/feg/label/learn-more-gasoline-label.shtml#fuel-economy
+
+Combined fuel economy is a weighted average of City and Highway MPG values that is calculated by weighting the City value by 55% and the Highway value by 45%
+
+## Tranformation and summary of dataset 
+
+```{r}
+fuel$Combined_mpg <-  fuel$cty*0.55 + fuel$hwy*0.45
+summary(fuel)
+```
+
+## Years and Combined fuel economy mpg are used
+
+```{r}
+library(dplyr)
+fuel_year <- fuel %>%
+  group_by(year) %>%
+  summarise(n = n(), mean = mean(Combined_mpg), median = median(Combined_mpg), sd = sd(Combined_mpg))
+fuel_year
+```
+
+```{r}
+hist(fuel$Combined_mpg)
+
+```
+
+# Remove outliners
+
+```{r}
+fuel <- fuel[!fuel$Combined_mpg %in% boxplot.stats(fuel$Combined_mpg)$out, ]
+```
+
+## Visaulization of Combined fuel economies
+
+```{r}
+hist(fuel$Combined_mpg)
+```
+
+## Graph analysis for different years
+
+```{r}
+library(ggplot2)
+plot(fuel_year$year,fuel_year$mean, type="b", lty=6, col="blue", bg="green", xlab="year", ylab="Mean of fuel") + abline(lm(fuel_year$mean ~ fuel_year$year))
+```
+
+```{r}
+library(ggplot2)
+ggplot(fuel, aes(y = Combined_mpg, x = as.factor(year), fill = as.factor(year))) + geom_boxplot(alpha = 0.5) + scale_x_discrete("", labels = NULL, breaks = NULL) + scale_y_continuous("", limits = c(5,35)) + guides(fill=guide_legend(title="Year")) + theme(legend.justification = c(0, 0.75), legend.position = c(0, 0.75), legend.background = element_rect(fill=NA), legend.title = element_text(face="bold"), legend.title.align = 0.5) + stat_summary(fun.y = mean, geom = "point", shape = 4, size = 2) + coord_flip() + ggtitle("Distribution of Fuel Economy by Year\n")
+
+ggplot(fuel, aes(x = Combined_mpg, fill = as.factor(year))) + geom_density(alpha = 0.5) + scale_y_continuous("", labels = NULL, breaks = NULL) + scale_x_continuous("Fuel Economy (Combined_mpg)", limits = c(5,35)) + guides(fill=guide_legend(title="Year")) + theme(legend.justification = c(0, 0.75), legend.position = c(0, 0.75), legend.background = element_rect(fill=NA), legend.title = element_text(face="bold"), legend.title.align = 0.5)
+
+```
+
+# Number of cylinders and Combined fuel economy mpg are used
+
+```{r}
+unique(fuel$cyl)
+```
+
+## Remove NA number of cylinder
+
+```{r}
+library(dplyr)
+fuel_cyl <- fuel %>% filter(!is.na(fuel$cyl))
+
+unique(fuel_cyl$cyl)
+```
+## Comparsion for the mean, median and sd for different number of cylinder
+
+```{r}
+grp_cyl <- fuel_cyl %>%
+  group_by(cyl) %>%
+  summarise(n = n(), mean = mean(Combined_mpg), median = median(Combined_mpg), sd = sd(Combined_mpg))
+grp_cyl
+
+
+```
+
+## Graph analysis for different number of cylinders
+
+```{r}
+plot(grp_cyl$cyl ,grp_cyl$mean, type="b", lty=6, col="blue", bg="green", xlab="number of cylinder", ylab="Mean of fuel") + abline(lm(grp_cyl$mean ~ grp_cyl$cyl))
+```
+
+## Visaulization of number of cylinders with Combined fuel economies
+
+```{r}
+ggplot(fuel_cyl, aes(y = Combined_mpg, x = as.factor(cyl), fill = as.factor(cyl))) + geom_boxplot(alpha = 0.5) + scale_x_discrete("Cylinders") + scale_y_continuous("Fuel Economy (mpg)\n") +  theme(legend.position = 'none') + stat_summary(fun.y = mean, geom = "point", shape = 4, size = 2) + ggtitle("Fuel Economy by Number of Engine Cylinders\n")
+
+```
+
+# Fuel types and Combined fuel economy mpg are used
+
+```{r}
+unique(fuel$fuel)
+```
+It is no meaning to compare the item of "or / and", it should be removed.
+
+```{r}
+library(dplyr)
+fuel_clean <- fuel %>% filter(!grepl("or|and",fuel$fuel))
+
+unique(fuel_clean$fuel)
+```
+
+```{r}
+fuel_type <- fuel_clean %>%
+  group_by(fuel) %>%
+  summarise(n = n(), mean = mean(Combined_mpg), median = median(Combined_mpg), sd = sd(Combined_mpg))
+fuel_type
+```
+
+
+```{r plot-by-fuel, echo=FALSE}
+ggplot(fuel_clean, aes(y = Combined_mpg, x = as.factor(fuel), fill = as.factor(fuel))) + geom_boxplot(alpha = 0.5) + scale_x_discrete("Fuel Type") + scale_y_continuous("Fuel Economy (mpg)\n") + theme(legend.position = 'none') + stat_summary(fun.y = mean, geom = "point", shape = 4, size = 2) + ggtitle("Distribution of Fuel Economy by Fuel Type\n")
+```
+
+# Inference: 
+## Years and Combined fuel economy mpg are used
+
+
+```{r}
+boxplot(fuel$Combined_mpg ~ fuel$year)
+by(fuel$Combined_mpg, fuel$year, mean)
+```
+
+This combined fuel of difference is statistically significant.
+
+## Check conditions 
+Before using ANOVA test to check the means across multiple groups, the condition are checked as follow:
+
+1. Independent condition: the data are independent observation. Each group should be independent of each other and select by randomization. 
+
+## Fuel economies for years
+2. The hypotheses test:
+
+* $H_0$: All the means of fuel economies from 1984 to 2015 are the same.
+* $H_A$: All the means of fuel economies from 1984 to 2015 are not all the same.
+
+To perform the ANOVA test, a linear regression is performed, and an ANOVA table is created using the `anova` function
+
+```{r anova-year}
+test_year <- lm(Combined_mpg ~  as.factor(year), data = fuel)
+summary(test_year)
+
+library(StMoSim)
+qqnormSim(test_year$residuals)
+qqline(test_year$residuals)
+```
+
+**The P-value is almost equal to 0, the null hypothesis rejected, that mean there is statiscally significant evidence that the fuel economy of vehicles is different from 1984 to 2015.**
+
+## Fuel economies for fuel
+2. The hypotheses test:
+
+* $H_0$: All the types of fuel for fuel economies are the same.
+* $H_A$: All the types of fuel for fuel economies are not all the same.
+
+To perform the ANOVA test, a linear regression is performed, and an ANOVA table is created using the `anova` function
+
+```{r anova-fuel}
+test_fuel <- lm(Combined_mpg ~  fuel, data = fuel_clean)
+summary(test_fuel)
+qqnormSim(test_fuel$residuals)
+qqline(test_fuel$residuals)
+```
+
+**The P-value is almost equal to 0, the null hypothesis rejected, that mean there is statiscally significant evidence that fuel economy of vehicles is different for cars using different fuel types.**
+
+## Fuel economies for cylinder
+2. The hypotheses test:
+
+* $H_0$: All the number of cylinders for fuel economies are the same.
+* $H_A$: All the number of cylinders for fuel economies are not the same.
+
+To perform the ANOVA test, a linear regression is performed, and an ANOVA table is created using the `anova` function
+
+```{r anova-cylinder}
+test_cyl <- lm(Combined_mpg ~  as.factor(cyl), data = fuel_cyl)
+summary(test_cyl)
+qqnormSim(test_cyl$residuals)
+qqline(test_cyl$residuals)
+```
+
+**The P-value is almost equal to 0, the null hypothesis rejected, that mean there is statiscally significant evidence that fuel economy of vehicles is different for engines with different numbers of cylinders.**
+
+# Conclusion: 
++ From the above analysis, I conclude that there are strong associations between the variables, such as year of vehicle, number of cylinders and type of fuels 
+the residuals appear to be nearly normal.
++ In this data, the distributions of residuals for year of vehicle, number of cylinders and type of fuels with fuel economies are nearly normal.
++ There is statiscally significant evidence that Fuel economy was different for car from 1984 to 2015, Fuel economy of vehicles is different for engines with different numbers of cylinders and Fuel economy of vehicles is different for cars using different fuel types.
+
+## References
+https://cran.r-project.org/web/packages/fueleconomy/fueleconomy.pdf
+http://www.fueleconomy.gov/feg/ws/wsData.shtml#VClass
+https://www.fueleconomy.gov/feg/label/learn-more-gasoline-label.shtml#fuel-economy
