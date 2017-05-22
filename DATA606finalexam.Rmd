@@ -1,0 +1,274 @@
+---
+title: "DATA606finalexam"
+author: "jim lung"
+date: "05-19-2017"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+---
+
+# Part I
+## 1. A student is gathering data on the driving experiences of other college students. A description of the
+data car color is presented below. Which of the variables are quantitative and discrete?
+car 1 = compact, 2 = standard size, 3 = mini van, 4 = SUV, and 5 = truck
+color red, blue, green, black, white
+daysDrive number of days per week the student drives
+gasMonth the amount of money the student spends on gas per month
+
+d. daysDrive, gasMonth
+
+## 2. A histogram of the GPA of 132 students from this course in Fall 2012 class is presented below. Which
+estimates of the mean and median are most plausible?
+
+a. mean = 3.3, median = 3.5
+
+```{r }
+((2.5/100) *132*1.9 + (2.5/100) *132*2.1 + (5/100) *132*2.5 + (5/100) *132*2.7 + (14/100) *132*2.9 + (5/100) *132*3.1 + (13/100) *132*3.3 + (13/100) *132*3.5 + (21/100) *132*3.7 + (20/100) *132*3.9)/132
+```
+
+## 3. A researcher wants to determine if a new treatment is effective for reducing Ebola related fever.
+What type of study should be conducted in order to establish that the treatment does indeed cause
+improvement in Ebola patients?
+
+d. Both studies (a) and (b) can be conducted in order to establish that the treatment does indeed cause
+improvement with regards to fever in Ebola patients
+
+## 4. A study is designed to test whether there is a relationship between natural hair color (brunette, blond,
+red) and eye color (blue, green, brown). If a large ${ x }^{ 2 }$ test statistic is obtained, this suggests that:
+
+d. eye color and natural hair color are independent
+
+## 5. A researcher studying how monkeys remember is interested in examining the distribution of the score on
+a standard memory task. The researcher wants to produce a boxplot to examine this distribution. Below
+are summary statistics from the memory task. What values should the researcher use to determine if a
+particular score is a potential outlier in the boxplot?
+
+```{r}
+#Q1 ¡V 1.5¡ÑIQR or above Q3 + 1.5¡ÑIQR
+37-1.5*(49.8-37)
+
+49.8+1.5*(49.8-37)
+```
+
+b. 17.8 and 69.0
+
+##6. The __________ are resistant to outliers, whereas the ________  are not.
+
+d. median and interquartile range; mean and standard deviation
+
+## 7. 
+Figure A below represents the distribution of an observed variable. Figure B below represents the
+distribution of the mean from 500 random samples of size 30 from A. The mean of A is 5.05 and the
+mean of B is 5.04. The standard deviations of A and B are 3.22 and 0.58, respectively.
+
+## a. Describe the two distributions (2 pts).
+
+A is that the population distribution is unimodal and right skewed, the mean is to the right and concentrated on the lower end of the distribution.
+
+B  is that the sample distribution is approximated symmetric, the sample size is 30.
+
+## b. Explain why the means of these two distributions are similar but the standard deviations are not (2
+pts).
+
+The B represent the distribution of the mean from 500 random samples of size 30 from A, because the sample size is 30 independent observations and data are not strongly skewed, so the means distribution are similar. The standard deviation is standard error for the mean estimated from the data.
+
+```{r}
+sd <- 3.22
+n <-30
+SE <- sd / sqrt(n)
+SE
+```
+
+Standare error, SE, is 0.5879
+
+## c. What is the statistical principal that describes this phenomenon (2 pts)?
+
+This is the principal of Central Limit Theorem, If a sample consists of at least 30 independent observations and the data are not strongly skewed, then the distribution of the sample mean is well approximated by a normal model.
+
+#Part II
+
+Consider the four datasets, each with two columns (x and y), provided below.
+
+```{r}
+options(digits=2)
+data1 <- data.frame(x=c(10,8,13,9,11,14,6,4,12,7,5),
+y=c(8.04,6.95,7.58,8.81,8.33,9.96,7.24,4.26,10.84,4.82,5.68))
+data2 <- data.frame(x=c(10,8,13,9,11,14,6,4,12,7,5),
+y=c(9.14,8.14,8.74,8.77,9.26,8.1,6.13,3.1,9.13,7.26,4.74))
+data3 <- data.frame(x=c(10,8,13,9,11,14,6,4,12,7,5),
+y=c(7.46,6.77,12.74,7.11,7.81,8.84,6.08,5.39,8.15,6.42,5.73))
+data4 <- data.frame(x=c(8,8,8,8,8,8,8,19,8,8,8),
+y=c(6.58,5.76,7.71,8.84,8.47,7.04,5.25,12.5,5.56,7.91,6.89))
+
+```
+
+For each column, calculate (to two decimal places):
+
+## a. The mean (for x and y separately; 1 pt).
+
+```{r}
+#mean of data1
+mean(data1$x)
+mean(data1$y)
+
+#mean of data2
+mean(data2$x)
+mean(data2$y)
+
+#mean of data3
+mean(data3$x)
+mean(data3$y)
+
+#mean of data4
+mean(data4$x)
+mean(data4$y)
+```
+
+
+##b. The median (for x and y separately; 1 pt).
+
+```{r}
+#median of data1
+median(data1$x)
+median(data1$y)
+
+#median  of data2
+median(data2$x)
+median(data2$y)
+
+#median  of data3
+median(data3$x)
+median(data3$y)
+
+#median  of data4
+median(data4$x)
+median (data4$y)
+```
+
+
+##c. The standard deviation (for x and y separately; 1 pt).
+```{r}
+#Standard deviation  of data1
+sd(data1$x)
+sd(data1$y)
+
+#Standard deviation  of data2
+sd(data2$x)
+sd(data2$y)
+
+#Standard deviation  of data3
+sd(data3$x)
+sd(data3$y)
+
+#Standard deviation  of data4
+sd(data4$x)
+sd(data4$y)
+```
+
+For each x and y pair, calculate (also to two decimal places; 1 pt):
+
+##d. The correlation (1 pt).
+
+```{r}
+cor(data1) 
+cor(data2) 
+cor(data3) 
+cor(data4) 
+```
+
+##e. Linear regression equation (2 pts).
+
+```{r}
+data1_regression <- lm(x ~ y, data = data1)
+summary(data1_regression)
+```
+
+data1 equation:
+y = -0.9975 + 1.3328 * x
+
+```{r}
+data2_regression <- lm(x ~ y, data = data2)
+summary(data2_regression)
+```
+
+data2 equation:
+y = -0.9948 + 1.3325 * x
+
+```{r}
+data3_regression <- lm(x ~ y, data = data3)
+summary(data3_regression)
+```
+
+data3 equation:
+y = -1.0003 + 1.3334 * x
+
+```{r}
+data4_regression <- lm(x ~ y, data = data4)
+summary(data4_regression)
+```
+
+data4 equation:
+y = -1.0036 + 1.3337 * x
+
+##f. R-Squared (2 pts).
+
+```{r}
+summary(data1_regression)$r.squared
+```
+
+```{r}
+summary(data2_regression)$r.squared
+```
+
+```{r}
+summary(data3_regression)$r.squared
+```
+
+```{r}
+summary(data4_regression)$r.squared
+```
+
+## For each pair, is it appropriate to estimate a linear regression model? Why or why not? Be specific as to why for each pair and include appropriate plots! (4 pts)
+
+```{r}
+plot(x ~ y, data1)
+abline(data1_regression)
+hist(data1_regression$residuals)
+qqnorm(data1_regression$residuals)
+qqline(data1_regression$residuals)
+```
+
+Data1 is approriate simple linear regression,  the variability of the residuals is relatively constant and nearly normal distribution.
+
+```{r}
+plot(x ~ y, data2)
+abline(data2_regression)
+hist(data2_regression$residuals)
+qqnorm(data2_regression$residuals)
+qqline(data2_regression$residuals)
+```
+
+Data2 is not a linear regression,  the variability of the residuals is not constant and strong skewed distribution.
+
+```{r}
+plot(x ~ y, data3)
+abline(data3_regression)
+hist(data3_regression$residuals)
+qqnorm(data3_regression$residuals)
+qqline(data3_regression$residuals)
+```
+
+Data3 is not a linear regression, because the residual distribution is bimodal, and not constant, one plot are shown over the outliner.
+
+```{r}
+plot(x ~ y, data4)
+abline(data4_regression)
+hist(data4_regression$residuals)
+```
+
+Data4 is not a linear regression,  the variability of the residuals is not constant.
+
+##Explain why it is important to include appropriate visualizations when analyzing data. Include any visualization(s) you create. (2 pts)
+
+It is really important to use graph and visuaalization for analyising data, like above data1 to data4, it has similar mean, median and standard deviation, if we just compare the data not visualization, it is not easy to identify the different of distribution and relationship. By using visualization, it can be more effective to compare the range, scope, trend of data change and relationship, such as residual distribution of data1 is nearly normal. 
